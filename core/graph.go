@@ -73,9 +73,6 @@ func GetNodeAt(nodes []*Node, row, coulmn int) *Node {
 }
 
 func (n *Node) Walk(endValue int, startNum int, pathID int) bool {
-	fmt.Println("startNum: ", startNum)
-	fmt.Println("endNum: ", endValue)
-
 	switch {
 	case startNum > 1:
 		return n.walk(endValue, startNum, pathID, mMinus)
