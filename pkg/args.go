@@ -20,12 +20,6 @@ func GetStartsByArgs(args []string, nodes []*core.Node) ([]*core.Node, []int) {
 		node := getRandomStart(nodes, i)
 		node.Value = d.StartValue
 		node.EndValue = d.EndValue
-		node.IsMarked = []core.Mark{
-			{
-				IsMarked: true,
-				PathId:   i + 1,
-			},
-		}
 		result = append(result, node)
 		pathIds = append(pathIds, i+1)
 	}

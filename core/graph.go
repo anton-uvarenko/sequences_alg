@@ -34,15 +34,16 @@ var (
 )
 
 func (n *Node) walk(endValue int, current int, pathID int, opertation mOperation) bool {
-	if endValue == current {
-		return true
-	}
-
 	n.IsMarked = append(n.IsMarked, Mark{
 		IsMarked: true,
 		PathId:   pathID,
 	})
 	n.Value = current
+
+	if endValue == current {
+		return true
+	}
+
 	current = opertation(current)
 	RandomizeArray(n.Connections)
 
@@ -116,9 +117,11 @@ func PrintSequnce(nodes []*Node, pathIds []int) {
 	for _, pathId := range pathIds {
 		for _, v := range nodes {
 			for _, m := range v.IsMarked {
-				if m.PathId == pathId {
-					result += fmt.Sprintf("%d-%d:%d,", v.Row, v.Column, v.Value)
+				if m.PathId != pathId {
+					continue
 				}
+
+				result += fmt.Sprintf("%d-%d:%d,", v.Row, v.Column, v.Value)
 			}
 		}
 		result += ";"
