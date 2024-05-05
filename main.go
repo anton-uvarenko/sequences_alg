@@ -2,7 +2,9 @@ package main
 
 import (
 	"os"
-	"strings"
+
+	"github.com/anton-uvarenko/suqences_alg/core"
+	"github.com/anton-uvarenko/suqences_alg/pkg"
 )
 
 const (
@@ -12,6 +14,11 @@ const (
 )
 
 func main() {
-	arguments := strings.Split(os.Args[0], ";")
-	CreateSequencesGraph(MAXW, MAXH)
+	arguments := os.Args[1:]
+	nodes := pkg.CreateSequencesGraph(MAXW, MAXH)
+	starts, pathIds := pkg.GetStartsByArgs(arguments, nodes)
+	for _, v := range starts {
+		v.Walk(v.EndValue, v.Value, v.IsMarked[0].PathId)
+	}
+	core.PrintSequnce(nodes, pathIds)
 }

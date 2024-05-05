@@ -1,8 +1,6 @@
 package core
 
-import (
-	"github.com/anton-uvarenko/suqences_alg/pkg"
-)
+import "fmt"
 
 type Mark struct {
 	PathId   int
@@ -14,7 +12,9 @@ type Node struct {
 	Row         int
 	Column      int
 	Value       int
-	IsMarked    []Mark
+	// EndValue is marker for start Node to know where we gonna end
+	EndValue int
+	IsMarked []Mark
 }
 
 type mOperation func(x int) int
@@ -33,8 +33,8 @@ var (
 	}
 )
 
-func (n *Node) walk(seqLength int, current int, pathID int, opertation mOperation) bool {
-	if seqLength == 0 {
+func (n *Node) walk(endValue int, current int, pathID int, opertation mOperation) bool {
+	if endValue == current {
 		return true
 	}
 
@@ -44,12 +44,12 @@ func (n *Node) walk(seqLength int, current int, pathID int, opertation mOperatio
 	})
 	n.Value = current
 	current = opertation(current)
-	pkg.RandomizeArray(n.Connections)
+	RandomizeArray(n.Connections)
 
 	for _, v := range n.Connections {
 		if !v.isMarked() ||
 			(v.isMarked() && v.containsPathId(pathID) && v.Value == current) {
-			isWalkable := v.walk(seqLength-1, current, pathID, opertation)
+			isWalkable := v.walk(endValue, current, pathID, opertation)
 			if isWalkable {
 				return true
 			}
@@ -72,12 +72,15 @@ func GetNodeAt(nodes []*Node, row, coulmn int) *Node {
 	return nil
 }
 
-func (n *Node) Walk(seqLength int, startNum int, pathID int) bool {
+func (n *Node) Walk(endValue int, startNum int, pathID int) bool {
+	fmt.Println("startNum: ", startNum)
+	fmt.Println("endNum: ", endValue)
+
 	switch {
 	case startNum > 1:
-		return n.walk(seqLength, startNum, pathID, mMinus)
+		return n.walk(endValue, startNum, pathID, mMinus)
 	case startNum == 1:
-		return n.walk(seqLength, startNum, pathID, mPlus)
+		return n.walk(endValue, startNum, pathID, mPlus)
 	}
 	return false
 }
@@ -109,4 +112,21 @@ func (n *Node) GetSuqence(pathID int) []*Node {
 		}
 	}
 	return result
+}
+
+func PrintSequnce(nodes []*Node, pathIds []int) {
+	result := ""
+	for _, pathId := range pathIds {
+		for _, v := range nodes {
+			for _, m := range v.IsMarked {
+				if m.PathId == pathId {
+					result += fmt.Sprintf("%d-%d:%d,", v.Row, v.Column, v.Value)
+				}
+			}
+		}
+		result += ";"
+	}
+
+	result = result[:len(result)-2]
+	fmt.Println(result)
 }
