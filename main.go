@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -23,12 +22,12 @@ func main() {
 		v.Walk(v.EndValue, v.Value, pathIds[i])
 	}
 
-	for _, v := range nodes {
-		fmt.Print(v.Value, " ")
-		if v.Column == width-1 {
-			fmt.Println()
-		}
-	}
+	// for _, v := range nodes {
+	// 	fmt.Print(v.Value, " ")
+	// 	if v.Column == width-1 {
+	// 		fmt.Println()
+	// 	}
+	// }
 
 	core.PrintSequnce(nodes, pathIds)
 }
