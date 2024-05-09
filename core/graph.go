@@ -1,6 +1,8 @@
 package core
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Mark struct {
 	PathId   int
@@ -34,10 +36,22 @@ var (
 )
 
 func (n *Node) walk(endValue int, current int, pathID int, opertation mOperation) bool {
-	n.IsMarked = append(n.IsMarked, Mark{
-		IsMarked: true,
-		PathId:   pathID,
-	})
+	for _, v := range n.IsMarked {
+		if v.PathId != pathID {
+			n.IsMarked = append(n.IsMarked, Mark{
+				IsMarked: true,
+				PathId:   pathID,
+			})
+		}
+	}
+
+	if len(n.IsMarked) == 0 {
+		n.IsMarked = append(n.IsMarked, Mark{
+			IsMarked: true,
+			PathId:   pathID,
+		})
+	}
+
 	n.Value = current
 
 	if endValue == current {
@@ -49,7 +63,7 @@ func (n *Node) walk(endValue int, current int, pathID int, opertation mOperation
 
 	for _, v := range n.Connections {
 		if !v.isMarked() ||
-			(v.isMarked() && v.containsPathId(pathID) && v.Value == current) {
+			(v.isMarked() && v.Value == current) {
 			isWalkable := v.walk(endValue, current, pathID, opertation)
 			if isWalkable {
 				return true

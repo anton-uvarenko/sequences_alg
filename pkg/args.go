@@ -18,6 +18,10 @@ func GetStartsByArgs(args []string, nodes []*core.Node) ([]*core.Node, []int) {
 	data := parseArgs(args)
 	for i, d := range data {
 		node := getRandomStart(nodes, i)
+		node.IsMarked = append(node.IsMarked, core.Mark{
+			PathId:   i + 1,
+			IsMarked: true,
+		})
 		node.Value = d.StartValue
 		node.EndValue = d.EndValue
 		result = append(result, node)
